@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Mic, StopCircle, CheckCircle, Loader } from 'lucide-react';
+import { supabase } from '../config/supabase';
 
 const Learning = ({ onComplete }) => {
     const [currentStep, setCurrentStep] = useState(0);
@@ -93,18 +94,14 @@ const Learning = ({ onComplete }) => {
         setIsAnalyzing(true);
         const formData = new FormData();
         formData.append('audio', audioBlob, 'recording.webm');
+        formData.append('mode', 'percentage');
 
         try {
-            const response = await fetch('/api/analyze?mode=percentage', {
-                method: 'POST',
-                body: formData,
-            });
+            const { data, error } = await supabase.functions.invoke('stutter-analyze', { body: formData });
 
-            if (!response.ok) {
-                throw new Error('Analysis failed');
+            if (error) {
+                throw error;
             }
-
-            const data = await response.json();
 
             // Map backend data to frontend model
             // Backend returns 'stutter_percentage' (0-100), we act as if 100 - p is fluency

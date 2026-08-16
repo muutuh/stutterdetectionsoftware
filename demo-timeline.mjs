@@ -29,10 +29,10 @@ await page.waitForSelector('.fixed >> text=What to do');
 // We'll bypass actual recording by directly calling the component internals via React DevTools trick.
 // Instead, navigate to step 3 by injecting freeSpeechResults into the page state using a custom event.
 await page.evaluate(() => {
-  // Simulate what the API would return by patching fetch for /api/analyze
+  // Simulate what the API would return by patching fetch for the stutter-analyze Edge Function
   window._originalFetch = window.fetch;
   window.fetch = async (url, opts) => {
-    if (url.includes('/api/analyze')) {
+    if (url.includes('/functions/v1/stutter-analyze')) {
       return new Response(JSON.stringify({
         success: true,
         duration: 28.5,
@@ -76,7 +76,7 @@ await page.evaluate(() => {
   // Return mock API response
   const _fetch = window.fetch.bind(window);
   window.fetch = async (url, opts) => {
-    if (typeof url === 'string' && url.includes('/api/analyze')) {
+    if (typeof url === 'string' && url.includes('/functions/v1/stutter-analyze')) {
       return new Response(JSON.stringify({
         success: true,
         duration: 28.5,

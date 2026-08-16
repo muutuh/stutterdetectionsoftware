@@ -11,7 +11,7 @@ A responsive web application for stuttering therapy. Practice daily exercises, t
 - 🏆 **Achievements** — unlock badges as you complete milestones
 - 🎤 **Interactive Exercises** — guided speech exercises (Turtle Pace, Soft Sounds, Breathing, Word Repetition, Prolonged Sounds, Phrase Practice)
 - 🤖 **AI-Generated Practice Content** — reading passages, Q&A prompts, and tongue twisters generated on demand
-- 🗣️ **Stutter Detection** — audio analysis via an external ML model API (see [MODEL_API_README.md](./MODEL_API_README.md))
+- 🗣️ **Stutter Detection** — audio analysis proxied through a Supabase Edge Function
 - 🔐 **Accounts & Auth** — sign up/sign in backed by Supabase
 - 📈 **Data Visualization** — progress charts built with Recharts
 - 🌐 **Responsive Design** — works on desktop, tablet, and mobile
@@ -24,6 +24,7 @@ A responsive web application for stuttering therapy. Practice daily exercises, t
 - **Icons:** Lucide React
 - **Utilities:** clsx, tailwind-merge
 - **AI:** OpenRouter (`anthropic/claude-3-haiku`), called through a Supabase Edge Function proxy so the API key never reaches the client
+- **Stutter Detection:** external ML model API, called through a Supabase Edge Function proxy so the backend URL never reaches the client
 - **Testing/Demo:** Playwright (`demo*.mjs` screenshot scripts)
 
 ## Getting Started
@@ -76,6 +77,12 @@ supabase secrets set OPENROUTER_API_KEY=your-openrouter-api-key
 supabase functions deploy openrouter-proxy
 ```
 
+The stutter-detection model's backend URL is likewise kept out of client code — it's hardcoded server-side in the `stutter-analyze` Edge Function rather than in any file shipped to the browser:
+
+```bash
+supabase functions deploy stutter-analyze
+```
+
 ## Available Scripts
 
 - `npm run dev` — start the development server
@@ -103,7 +110,8 @@ clarity-web/
 │   └── index.css
 ├── supabase/
 │   └── functions/
-│       └── openrouter-proxy/  # Edge Function that proxies OpenRouter requests
+│       ├── openrouter-proxy/  # Edge Function that proxies OpenRouter requests
+│       └── stutter-analyze/   # Edge Function that proxies stutter-detection requests
 ├── public/                 # Static assets
 ├── demo*.mjs                # Playwright scripts for screenshots/demos
 ├── tailwind.config.js
@@ -127,12 +135,13 @@ clarity-web/
 4. Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` as environment variables in the Vercel project settings
 5. Deploy
 
-### Deploy the AI proxy
+### Deploy the Edge Functions
 
-The `openrouter-proxy` Edge Function is deployed separately through Supabase, not through Vercel:
+The `openrouter-proxy` and `stutter-analyze` Edge Functions are deployed separately through Supabase, not through Vercel:
 
 ```bash
 supabase functions deploy openrouter-proxy
+supabase functions deploy stutter-analyze
 ```
 
 ## Features Walkthrough

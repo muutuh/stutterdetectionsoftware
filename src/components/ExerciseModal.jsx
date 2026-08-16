@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, Mic, CheckCircle, ArrowRight, Play, Pause, StopCircle, Loader, Sparkles } from 'lucide-react';
 import { generateReadingPassage, generateQAPair, generateTongueTwister } from '../utils/aiGenerate';
+import { supabase } from '../config/supabase';
 
 const ExerciseModal = ({ exercise, onClose, showTips }) => {
     // ── Shared ──────────────────────────────────────────────────────────────
@@ -75,10 +76,10 @@ const ExerciseModal = ({ exercise, onClose, showTips }) => {
         setIsAnalyzing(true);
         const fd = new FormData();
         fd.append('audio', blob, 'recording.webm');
+        fd.append('mode', 'segments');
         try {
-            const res = await fetch('/api/analyze?mode=segments', { method: 'POST', body: fd });
-            if (!res.ok) throw new Error('Analysis failed');
-            const data = await res.json();
+            const { data, error } = await supabase.functions.invoke('stutter-analyze', { body: fd });
+            if (error) throw error;
             const segs = data.segments || [];
             const stutterCount = segs.filter(s => s.label === 'stutter').length;
             const stutterPct = segs.length > 0 ? Math.round((stutterCount / segs.length) * 100) : 0;
