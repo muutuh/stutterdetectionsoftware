@@ -39,8 +39,8 @@ A responsive web application for stuttering therapy. Practice daily exercises, t
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/abdu-l7hman/new_stuttering.git
-   cd new_stuttering
+   git clone https://github.com/muutuh/stutterdetectionsoftware.git
+   cd stutterdetectionsoftware
    ```
 
 2. Install dependencies:
