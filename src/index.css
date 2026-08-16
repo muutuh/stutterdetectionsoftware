@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans antialiased text-gray-900 bg-gray-50;
+  }
+}
+
+:root {
+  /* Default Branding (Emerald/Teal) */
+  --color-primary: 16 185 129;
+  /* emerald-500 */
+  --color-primary-dark: 5 150 105;
+  /* emerald-600 */
+  --color-secondary: 245 158 11;
+  /* amber-500 */
+  --color-accent: 20 184 166;
+  /* teal-500 */
+  --color-danger: 239 68 68;
+  /* red-500 */
+}
+
+/* Dark Mode Support (Optional overrides if needed) */
+.dark body {
+  @apply bg-gray-900 text-gray-50;
+}

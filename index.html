@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clarity - Speech Therapy</title>
+  </head>
+  <script>
+    (function() {
+      try {
+        const storedPreset = localStorage.getItem('cb_preset');
+        const cbEnabled = localStorage.getItem('cb_mode_enabled') === 'true';
+        if (cbEnabled && storedPreset) {
+          document.documentElement.setAttribute('data-theme', storedPreset);
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
